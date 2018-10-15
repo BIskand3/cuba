@@ -25,17 +25,65 @@ package com.haulmont.cuba.gui.components;
 public interface HtmlAttributes {
     String NAME = "cuba_HtmlAttributes";
 
+    /**
+     * Sets DOM attribute on the top most element of UI component.
+     *
+     * @param component UI component
+     * @param attributeName DOM attribute name, e.g. "title"
+     * @param value attribute value
+     * @see DOM
+     */
     void setDomAttribute(Component component, String attributeName, String value);
+    /**
+     * Gets DOM attribute value assigned using {@link HtmlAttributes}. Does not reflect a real value from DOM.
+     *
+     * @param component UI component
+     * @param attributeName DOM attribute name
+     * @return previously assigned DOM attribute value
+     */
     String getDomAttribute(Component component, String attributeName);
 
+    /**
+     * Removes DOM attribute from the top most element of UI component.
+     *
+     * @param component UI component
+     * @param attributeName DOM attribute name
+     */
     void removeDomAttribute(Component component, String attributeName);
 
-    void setCssProperty(Component component, String attributeName, String value);
-    String getCssProperty(Component component, String attributeName);
+    /**
+     * Sets CSS property value on the top most element of UI component.
+     *
+     * @param component UI component
+     * @param propertyName CSS property name, e.g. "border-color"
+     * @param value property value
+     * @see CSS
+     */
+    void setCssProperty(Component component, String propertyName, String value);
+    /**
+     * Gets CSS property value assigned using {@link HtmlAttributes}. Does not reflect a real value from DOM.
+     *
+     * @param component UI component
+     * @param propertyName CSS property name
+     * @return previously assigned CSS property value
+     */
+    String getCssProperty(Component component, String propertyName);
 
-    void removeCssProperty(Component component, String attributeName);
+    /**
+     * Clears CSS property value from the top most element of UI component.
+     *
+     * @param component UI component
+     * @param propertyName CSS property name
+     */
+    void removeCssProperty(Component component, String propertyName);
 
-    class CSS {
+    /**
+     * Common CSS property names.
+     */
+    final class CSS {
+        private CSS() {
+        }
+
         public static final String ANIMATION = "animation";
         public static final String ANIMATION_NAME = "animation-name";
         public static final String ANIMATION_DURATION = "animation-duration";
@@ -61,6 +109,7 @@ public interface HtmlAttributes {
         public static final String BORDER = "border";
         public static final String BORDER_COLOR = "border-color";
         public static final String BORDER_STYLE = "border-style";
+        public static final String BORDER_RADIUS = "border-radius";
 
         public static final String BORDER_BOTTOM = "border-bottom";
         public static final String BORDER_BOTTOM_COLOR = "border-bottom-color";
@@ -199,7 +248,13 @@ public interface HtmlAttributes {
         public static final String GRID_ROW = "grid-row";
     }
 
-    class DOM {
+    /**
+     * Common DOM attribute names.
+     */
+    final class DOM {
+        private DOM() {
+        }
+
         public static final String TYPE = "type";
         public static final String VALUE = "value";
         public static final String ID = "id";
@@ -207,6 +262,7 @@ public interface HtmlAttributes {
         public static final String HREF = "href";
         public static final String ALT = "alt";
         public static final String NAME = "name";
+        public static final String TITLE = "title";
         public static final String STYLE = "style";
     }
 }

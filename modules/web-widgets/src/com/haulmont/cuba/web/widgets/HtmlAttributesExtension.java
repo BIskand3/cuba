@@ -31,7 +31,7 @@ import java.util.Set;
 public class HtmlAttributesExtension extends AbstractExtension {
 
     protected Set<String> removeDomAttributes = Collections.emptySet();
-    protected Set<String> removeCssAttributes = Collections.emptySet();
+    protected Set<String> removeCssProperties = Collections.emptySet();
 
     public HtmlAttributesExtension(AbstractClientConnector target) {
         super(target);
@@ -84,9 +84,9 @@ public class HtmlAttributesExtension extends AbstractExtension {
         }
     }
 
-    public void setCssProperty(String attributeName, String value) {
-        if (!removeCssAttributes.isEmpty()) {
-            removeCssAttributes.remove(attributeName);
+    public void setCssProperty(String propertyName, String value) {
+        if (!removeCssProperties.isEmpty()) {
+            removeCssProperties.remove(propertyName);
         }
 
         HtmlAttributesExtensionState state = getState();
@@ -94,21 +94,21 @@ public class HtmlAttributesExtension extends AbstractExtension {
         if (state.css.isEmpty()) {
             state.css = new HashMap<>();
         }
-        state.css.put(attributeName, value);
+        state.css.put(propertyName, value);
     }
 
-    public String getCssProperty(String attributeName) {
-        return getState(false).css.get(attributeName);
+    public String getCssProperty(String propertyName) {
+        return getState(false).css.get(propertyName);
     }
 
-    public void removeCssProperty(String attributeName) {
+    public void removeCssProperty(String propertyName) {
         if (!getState().css.isEmpty()) {
-            getState().css.remove(attributeName);
+            getState().css.remove(propertyName);
 
-            if (removeCssAttributes.isEmpty()) {
-                removeCssAttributes = new HashSet<>();
+            if (removeCssProperties.isEmpty()) {
+                removeCssProperties = new HashSet<>();
             }
-            removeCssAttributes.add(attributeName);
+            removeCssProperties.add(propertyName);
         }
     }
 
@@ -125,10 +125,10 @@ public class HtmlAttributesExtension extends AbstractExtension {
                 this.removeDomAttributes = Collections.emptySet();
             }
 
-            if (!removeCssAttributes.isEmpty()) {
-                clientRpc.removeCssProperties(removeCssAttributes);
+            if (!removeCssProperties.isEmpty()) {
+                clientRpc.removeCssProperties(removeCssProperties);
 
-                this.removeCssAttributes = Collections.emptySet();
+                this.removeCssProperties = Collections.emptySet();
             }
         }
     }

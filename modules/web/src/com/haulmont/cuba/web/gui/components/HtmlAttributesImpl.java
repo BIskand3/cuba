@@ -44,23 +44,23 @@ public class HtmlAttributesImpl implements HtmlAttributes {
     }
 
     @Override
-    public void setCssProperty(Component component, String attributeName, String value) {
+    public void setCssProperty(Component component, String propertyName, String value) {
         com.vaadin.ui.Component vComponent = component.unwrapComposition(com.vaadin.ui.Component.class);
         HtmlAttributesExtension.get(vComponent)
-                .setCssProperty(attributeName, value);
+                .setCssProperty(propertyName, value);
     }
 
     @Override
-    public String getCssProperty(Component component, String attributeName) {
+    public String getCssProperty(Component component, String propertyName) {
         com.vaadin.ui.Component vComponent = component.unwrapComposition(com.vaadin.ui.Component.class);
         return HtmlAttributesExtension.get(vComponent)
-                .getCssProperty(attributeName);
+                .getCssProperty(propertyName);
     }
 
     @Override
-    public void removeCssProperty(Component component, String attributeName) {
+    public void removeCssProperty(Component component, String propertyName) {
         com.vaadin.ui.Component vComponent = component.unwrapComposition(com.vaadin.ui.Component.class);
         HtmlAttributesExtension.get(vComponent)
-                .removeCssProperty(attributeName);
+                .removeCssProperty(propertyName);
     }
 }
