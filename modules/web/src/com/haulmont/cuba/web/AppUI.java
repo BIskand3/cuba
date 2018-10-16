@@ -21,7 +21,6 @@ import com.haulmont.cuba.client.ClientUserSession;
 import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.gui.*;
 import com.haulmont.cuba.gui.components.RootWindow;
-import com.haulmont.cuba.gui.components.Window;
 import com.haulmont.cuba.gui.events.sys.UiEventsMulticaster;
 import com.haulmont.cuba.gui.sys.TestIdManager;
 import com.haulmont.cuba.gui.theme.ThemeConstantsRepository;
@@ -35,12 +34,15 @@ import com.haulmont.cuba.web.events.UIRefreshEvent;
 import com.haulmont.cuba.web.gui.icons.IconResolver;
 import com.haulmont.cuba.web.security.events.AppInitializedEvent;
 import com.haulmont.cuba.web.security.events.SessionHeartbeatEvent;
-import com.haulmont.cuba.web.sys.LinkHandler;
 import com.haulmont.cuba.web.sys.WebJarResourceResolver;
+import com.haulmont.cuba.web.url.UriChangeHandler;
 import com.haulmont.cuba.web.widgets.*;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
-import com.vaadin.server.*;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.Extension;
+import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -60,7 +62,7 @@ import java.util.*;
 @Push(transport = Transport.WEBSOCKET_XHR)
 @PreserveOnRefresh
 public class AppUI extends CubaUI
-        implements ErrorHandler, EnhancedUI, CubaHistoryControl.HistoryBackHandler {
+        implements ErrorHandler, EnhancedUI {
 
     public static final String NAME = "cuba_AppUI";
 
@@ -111,8 +113,6 @@ public class AppUI extends CubaUI
 
     protected CubaFileDownloader fileDownloader;
 
-    protected CubaHistoryControl historyControl;
-
     protected RootWindow topLevelWindow;
 
     protected Fragments fragments;
@@ -120,6 +120,7 @@ public class AppUI extends CubaUI
     protected Dialogs dialogs;
     protected Notifications notifications;
     protected WebBrowserTools webBrowserTools;
+    protected UriChangeHandler uriChangeHandler;
 
     public AppUI() {
     }
@@ -163,11 +164,6 @@ public class AppUI extends CubaUI
 
         fileDownloader = new CubaFileDownloader();
         fileDownloader.extend(this);
-
-        if (webConfig.getAllowHandleBrowserHistoryBack()) {
-            historyControl = new CubaHistoryControl();
-            historyControl.extend(this, this);
-        }
     }
 
     protected App createApplication() {
@@ -226,6 +222,8 @@ public class AppUI extends CubaUI
         try {
             initUiScope();
 
+            initUriChangeHandler();
+
             this.testMode = globalConfig.getTestMode();
             this.performanceTestMode = globalConfig.getPerformanceTestMode();
             // init error handlers
@@ -269,6 +267,13 @@ public class AppUI extends CubaUI
         }
 
         processExternalLink(request);
+    }
+
+    protected void initUriChangeHandler() {
+        uriChangeHandler = beanLocator.getPrototype(UriChangeHandler.NAME);
+
+        getPage().addPopStateListener(event ->
+                uriChangeHandler.handleUriChange(event.getUri()));
     }
 
     protected void initUiScope() {
@@ -466,7 +471,8 @@ public class AppUI extends CubaUI
     }
 
     public void processExternalLink(VaadinRequest request) {
-        WrappedSession wrappedSession = request.getWrappedSession();
+        // TODO: implement
+        /*WrappedSession wrappedSession = request.getWrappedSession();
         if (wrappedSession == null) {
             return;
         }
@@ -489,7 +495,7 @@ public class AppUI extends CubaUI
             } catch (Exception e) {
                 error(new com.vaadin.server.ErrorEvent(e));
             }
-        }
+        }*/
     }
 
     @Override
@@ -514,14 +520,6 @@ public class AppUI extends CubaUI
 
         getReconnectDialogConfiguration().setDialogText(messages.getMainMessage("reconnectDialogText", locale));
         getReconnectDialogConfiguration().setDialogTextGaveUp(messages.getMainMessage("reconnectDialogTextGaveUp", locale));
-    }
-
-    @Override
-    public void onHistoryBackPerformed() {
-        Window topLevelWindow = getTopLevelWindow();
-        if (topLevelWindow instanceof CubaHistoryControl.HistoryBackHandler) {
-            ((CubaHistoryControl.HistoryBackHandler) topLevelWindow).onHistoryBackPerformed();
-        }
     }
 
     protected AbstractComponent getTopLevelWindowComposition() {
