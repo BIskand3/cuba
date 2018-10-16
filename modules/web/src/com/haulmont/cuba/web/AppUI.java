@@ -266,7 +266,7 @@ public class AppUI extends CubaUI
             return;
         }
 
-        processExternalLink(request);
+        processRequest(request);
     }
 
     protected void initUriChangeHandler() {
@@ -405,7 +405,7 @@ public class AppUI extends CubaUI
     @Override
     public void handleRequest(VaadinRequest request) {
         // on refresh page call
-        processExternalLink(request);
+        processRequest(request);
     }
 
     /**
@@ -470,7 +470,7 @@ public class AppUI extends CubaUI
         }
     }
 
-    public void processExternalLink(VaadinRequest request) {
+    public void processRequest(VaadinRequest request) {
         // TODO: implement
         /*WrappedSession wrappedSession = request.getWrappedSession();
         if (wrappedSession == null) {
