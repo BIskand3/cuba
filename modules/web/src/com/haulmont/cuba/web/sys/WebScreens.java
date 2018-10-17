@@ -462,6 +462,11 @@ public class WebScreens implements Screens, WindowManager {
         }
 
         // todo remove event ?
+
+        afterRemoveWindow(screen);
+    }
+
+    protected void afterRemoveWindow(Screen screen) {
     }
 
     protected void removeThisTabWindow(Screen screen) {
