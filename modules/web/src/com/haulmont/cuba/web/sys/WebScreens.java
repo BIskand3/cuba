@@ -463,10 +463,10 @@ public class WebScreens implements Screens, WindowManager {
 
         // todo remove event ?
 
-        afterRemoveWindow(screen);
+        afterRemoveWindow();
     }
 
-    protected void afterRemoveWindow(Screen screen) {
+    protected void afterRemoveWindow() {
         WebAppWorkArea workArea = getConfiguredWorkArea();
 
         if (workArea.getMode() == Mode.SINGLE) {
@@ -477,13 +477,11 @@ public class WebScreens implements Screens, WindowManager {
         TabSheetBehaviour tabSheet = workArea.getTabbedWindowContainer().getTabSheetBehaviour();
         TabWindowContainer windowContainer = (TabWindowContainer) tabSheet.getSelectedTab();
 
-        if (windowContainer == null) {
-            Screen rootScreen = ui.getTopLevelWindow().getFrameOwner();
-            navigation.replaceState(rootScreen);
-        } else {
-            Screen currentScreen = windowContainer.getBreadCrumbs().getCurrentWindow().getFrameOwner();
-            navigation.replaceState(currentScreen);
-        }
+        Screen currentScreen = windowContainer == null
+                ? ui.getTopLevelWindow().getFrameOwner()
+                : windowContainer.getBreadCrumbs().getCurrentWindow().getFrameOwner();
+
+        navigation.replaceState(currentScreen);
     }
 
     protected void removeThisTabWindow(Screen screen) {
