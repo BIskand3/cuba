@@ -393,7 +393,7 @@ public class WebScreens implements Screens, WindowManager {
         AfterShowEvent afterShowEvent = new AfterShowEvent(screen);
         fireEvent(screen, AfterShowEvent.class, afterShowEvent);
 
-        navigation.pushState(screen);
+        navigation.pushState(screen, true);
     }
 
     protected void afterShowWindow(Screen screen) {
