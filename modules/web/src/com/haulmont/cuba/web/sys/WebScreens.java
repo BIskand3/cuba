@@ -66,6 +66,7 @@ import com.haulmont.cuba.security.entity.PermissionType;
 import com.haulmont.cuba.web.AppUI;
 import com.haulmont.cuba.web.WebConfig;
 import com.haulmont.cuba.web.gui.WebWindow;
+import com.haulmont.cuba.web.gui.components.WebDialogWindow;
 import com.haulmont.cuba.web.gui.components.WebTabWindow;
 import com.haulmont.cuba.web.gui.components.mainwindow.WebAppWorkArea;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
@@ -1399,6 +1400,7 @@ public class WebScreens implements Screens, WindowManager {
         WindowBreadCrumbs breadCrumbs = createWindowBreadCrumbs(screen);
         breadCrumbs.setWindowNavigateHandler(this::handleWindowBreadCrumbsNavigate);
         breadCrumbs.addWindow(screen.getWindow());
+        ((WebWindow) screen.getWindow()).setStateMark(getConfiguredWorkArea().getNewStateMark());
 
         TabWindowContainer windowContainer = new TabWindowContainerImpl();
         windowContainer.setPrimaryStyleName("c-app-window-wrap");
@@ -1500,6 +1502,7 @@ public class WebScreens implements Screens, WindowManager {
         windowContainer.addComponent(newWindowComposition);
 
         breadCrumbs.addWindow(newWindow);
+        ((WebWindow) newWindow).setStateMark(workArea.getNewStateMark());
 
         if (workArea.getMode() == Mode.TABBED) {
             TabSheetBehaviour tabSheet = workArea.getTabbedWindowContainer().getTabSheetBehaviour();
@@ -1528,6 +1531,7 @@ public class WebScreens implements Screens, WindowManager {
 
     protected void showDialogWindow(Screen screen) {
         DialogWindow window = (DialogWindow) screen.getWindow();
+        ((WebWindow) window).setStateMark(getConfiguredWorkArea().getNewStateMark());
 
         CubaWindow vWindow = window.unwrapComposition(CubaWindow.class);
         vWindow.setErrorHandler(ui);

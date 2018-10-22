@@ -79,6 +79,8 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     // lazy initialized listeners list
     protected List<StateChangeListener> stateChangeListeners = null;
 
+    protected int stateCounter = 0;
+
     public WebAppWorkArea() {
         component = new CssLayout();
         component.setPrimaryStyleName(WORKAREA_STYLENAME);
@@ -330,6 +332,10 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
             return Collections.singletonList(getInitialLayout());
         }
         return Collections.emptyList();
+    }
+
+    public int getNewStateMark() {
+        return stateCounter++;
     }
 
     // Allows Tabs reordering, do not support component / text drop to Tabs panel
