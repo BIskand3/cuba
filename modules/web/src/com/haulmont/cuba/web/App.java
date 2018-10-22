@@ -79,6 +79,8 @@ public abstract class App {
 
     public static final String COOKIE_LOCALE = "LAST_LOCALE";
 
+    protected static final String REDIRECT_PARAM = "redirectTo";
+
     private static final Logger log = LoggerFactory.getLogger(App.class);
 
     static {
@@ -287,7 +289,7 @@ public abstract class App {
      * Called on each browser tab initialization.
      */
     public void createTopLevelWindow(AppUI ui) {
-        Navigation.UriState state = navigation.getState();
+        Navigation.UriState requestedState = navigation.getState();
 
         String topLevelWindowId = routeTopLevelWindowId();
         WindowInfo windowInfo = windowConfig.getWindowInfo(topLevelWindowId);
@@ -297,7 +299,7 @@ public abstract class App {
         Screen screen = screens.create(windowInfo, OpenMode.ROOT);
         screens.show(screen);
 
-        handleRedirect(state);
+        handleRedirect(requestedState);
     }
 
     protected void handleRedirect(Navigation.UriState uriState) {
@@ -305,17 +307,15 @@ public abstract class App {
             return;
         }
 
-        final String REDIRECT_TO = "redirectTo";
-
         if (!connection.isAuthenticated()) {
-            String screen = uriState.getNestedRoute();
-            if (screen == null || screen.isEmpty()) {
+            String nestedRoute = uriState.getNestedRoute();
+            if (nestedRoute == null || nestedRoute.isEmpty()) {
                 return;
             }
 
             Map<String, String> params = new HashMap<>();
+            params.put(REDIRECT_PARAM, nestedRoute);
 
-            params.put(REDIRECT_TO, screen);
             if (uriState.getParams() != null) {
                 params.putAll(uriState.getParams());
             }
@@ -327,7 +327,7 @@ public abstract class App {
                 return;
             }
 
-            String redirectTo = params.get(REDIRECT_TO);
+            String redirectTo = params.get(REDIRECT_PARAM);
             if (redirectTo == null || redirectTo.isEmpty()) {
                 navigation.replaceState(getTopLevelWindow().getFrameOwner());
                 return;
