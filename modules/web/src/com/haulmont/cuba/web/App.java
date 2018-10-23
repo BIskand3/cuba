@@ -29,6 +29,7 @@ import com.haulmont.cuba.gui.config.WindowConfig;
 import com.haulmont.cuba.gui.config.WindowInfo;
 import com.haulmont.cuba.gui.executors.IllegalConcurrentAccessException;
 import com.haulmont.cuba.gui.navigation.Navigation;
+import com.haulmont.cuba.gui.navigation.UriState;
 import com.haulmont.cuba.gui.screen.OpenMode;
 import com.haulmont.cuba.gui.screen.Screen;
 import com.haulmont.cuba.gui.settings.SettingsClient;
@@ -289,7 +290,7 @@ public abstract class App {
      * Called on each browser tab initialization.
      */
     public void createTopLevelWindow(AppUI ui) {
-        Navigation.UriState requestedState = navigation.getState();
+        UriState requestedState = navigation.getState();
 
         String topLevelWindowId = routeTopLevelWindowId();
         WindowInfo windowInfo = windowConfig.getWindowInfo(topLevelWindowId);
@@ -302,7 +303,7 @@ public abstract class App {
         handleRedirect(requestedState);
     }
 
-    protected void handleRedirect(Navigation.UriState uriState) {
+    protected void handleRedirect(UriState uriState) {
         if (uriState == null) {
             return;
         }
